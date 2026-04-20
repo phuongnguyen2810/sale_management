@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Cửa Hàng Mini</title>
+    <style>
+        /* CSS Reset & Cơ bản */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        body { display: block; min-height: 100vh; background-color: #f4f6f9; margin: 0; }
+
+        /* THANH BÊN (SIDEBAR) */
+        .sidebar { width: 250px; background: #343a40; color: white; display: flex; flex-direction: column; }
+        .sidebar h2 { text-align: center; padding: 20px 0; background: #23272b; font-size: 20px; border-bottom: 1px solid #4b545c; }
+        .sidebar a { padding: 15px 20px; color: #c2c7d0; text-decoration: none; border-left: 4px solid transparent; transition: 0.3s; }
+        .sidebar a:hover, .sidebar a.active { background: #494e53; color: white; border-left: 4px solid #007bff; }
+        .logout-menu { margin-top: auto; background: #dc3545; color: white; text-align: center; padding: 15px; cursor: pointer; }
+
+        /* KHU VỰC NỘI DUNG CHÍNH */
+        .main-content { flex: 1; padding: 20px; overflow-y: auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #ddd; }
+        .header h1 { color: #333; font-size: 24px; }
+        .btn-add { background: #28a745; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn-add:hover { background: #218838; }
+
+        /* BẢNG SẢN PHẨM */
+        table { width: 100%; border-collapse: collapse; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-radius: 5px; overflow: hidden; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background-color: #007bff; color: white; }
+        img.thumb { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; }
+        .action-btn { padding: 5px 10px; border: none; border-radius: 3px; cursor: pointer; color: white; font-size: 13px; }
+        .btn-edit { background: #ffc107; color: #000; }
+        .btn-delete { background: #dc3545; }
+
+        /* MODAL (POPUP FORM) THÊM/SỬA */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: white; padding: 25px; border-radius: 8px; width: 400px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .modal-content h3 { margin-bottom: 15px; color: #333; }
+        .modal-content input { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+        .btn-close { background: #6c757d; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; }
+        .btn-save { background: #007bff; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        /* Giao diện Login Căn giữa toàn màn hình */
+        #adminLogin {
+            display: none; 
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100vh;
+            background: linear-gradient(135deg, #343a40 0%, #212529 100%); /* Nền gradient cho sang */
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        .login-card h2 {
+            margin-bottom: 25px;
+            color: #333;
+            font-size: 26px;
+            font-weight: bold;
+        }
+
+        .login-card input {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .login-card input:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 8px rgba(0,123,255,0.2);
+        }
+
+        .login-card button {
+            width: 100%;
+            padding: 12px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .login-card button:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        /* Sửa lại Dashboard để nó không bị lỗi hiển thị khi chuyển đổi */
+        #adminDashboard {
+            display: none; 
+            width: 100%;
+            height: 100vh;
+        }
+    
+    </style>
+</head>
+<body>
+    <div id="adminLogin">
+        <div class="login-card">
+            <h2>🔐 Admin Login</h2>
+            <form id="loginForm">
+                <input type="email" id="adminEmail" placeholder="Email Quản trị" required>
+                <input type="password" id="adminPassword" placeholder="Mật khẩu" required>
+                <button type="submit">Đăng Nhập Hệ Thống</button>
+            </form>
+            <p style="margin-top: 20px; font-size: 13px; color: #666;">
+                Khu vực hạn chế. Vui lòng không truy cập nếu không có quyền.
+            </p>
+        </div>
+    </div>
+
+    <div id="adminDashboard" style="display: none; width: 100%; height: 100vh; flex-direction: row;">
+        <aside class="sidebar">
+            <h2>⚙️ ADMIN PANEL</h2>
+            <a href="javascript:void(0)" onclick="showSection('productSection')" id="nav-prod" class="active">📦 Quản lý Sản phẩm</a>
+            <a href="javascript:void(0)" onclick="showSection('categorySection')" id="nav-cat">🏷️ Quản lý Danh mục</a>
+            <a href="javascript:void(0)" onclick="showSection('orderSection')" id="nav-order">🛒 Quản lý Đơn hàng</a>
+            <a href="javascript:void(0)" onclick="showSection('userSection')" id="nav-user">👥 Quản lý Người dùng</a>
+            <a href="index.html">🏠 Về Trang Chủ</a>
+            <div class="logout-menu" onclick="logoutAdmin()">Đăng xuất Admin</div>
+        </aside>
+
+        <main class="main-content">
+            <section id="productSection">
+                <div class="header">
+                    <h1>Danh Sách Sản Phẩm</h1>
+                    <div style="display: flex; gap: 10px;">
+                        <select id="productCategoryFilter" onchange="loadProducts()" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-weight: bold;">
+                            <option value="ALL">Tất cả danh mục</option>
+                            </select>
+                        
+                        <input type="text" id="productSearch" onkeyup="loadProducts()" placeholder="🔍 Tìm tên sản phẩm..." style="padding: 8px; border-radius: 4px; border: 1px solid #ccc; width: 250px;">
+                    </div>
+                    <button class="btn-add" onclick="openModal()">➕ Thêm Sản Phẩm Mới</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ảnh</th>
+                            <th>Tên SP</th>
+                            <th>Danh mục</th>
+                            <th>Giá</th>
+                            <th>Kho</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productTableBody"></tbody>
+                </table>
+            </section>
+
+            <section id="categorySection" style="display: none;">
+                <div class="header">
+                    <h1>Danh Mục Hệ Thống</h1>
+                    <button class="btn-add" onclick="openCategoryModal()">➕ Tạo Danh Mục Mới</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tên Danh Mục</th>
+                            <th>Mô tả</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="categoryTableBody"></tbody>
+                </table>
+            </section>
+
+            <section id="orderSection" style="display: none;">
+                <div class="header">
+                    <h1>Danh Sách Đơn Hàng</h1>
+                    <input type="text" id="orderPhoneSearch" onkeyup="loadOrdersTable()" placeholder="🔍 Nhập SĐT để tìm..." style="padding: 8px; border-radius: 4px; border: 1px solid #ccc; width: 250px;">
+                    <div class="filter-box">
+                        <label style="font-weight: bold; margin-right: 10px;">Lọc trạng thái:</label>
+                        <select id="orderStatusFilter" onchange="loadOrdersTable()" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-weight: bold;">
+                            <option value="ALL">Tất cả đơn hàng</option>
+                            <option value="Pending">Chờ duyệt</option>
+                            <option value="Processing">Đang gói hàng</option>
+                            <option value="Shipped">Đang giao</option>
+                            <option value="Delivered">Đã giao</option>
+                            <option value="Canceled">Đã hủy</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mã Đơn</th>
+                                <th>Khách hàng</th>
+                                <th>Sản phẩm</th>
+                                <th>Tổng tiền</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orderTableBody">
+                            <tr><td colspan="6" style="text-align: center;">Đang tải đơn hàng...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="userSection" style="display: none;">
+                <div class="header">
+                    <h1>Danh Sách Khách Hàng</h1>
+                    <input type="text" id="userEmailSearch" onkeyup="loadUsersTable()" placeholder="🔍 Tìm bằng Email/Gmail..." style="padding: 8px; border-radius: 4px; border: 1px solid #ccc; width: 300px;">
+                <div style="display: flex; gap: 10px;">
+                    <select id="userRoleFilter" onchange="loadUsersTable()" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-weight: bold;">
+                        <option value="ALL">Tất cả quyền</option>
+                        <option value="admin">Quản trị viên</option>
+                        <option value="customer">Khách hàng</option>
+                    </select>
+                </div>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tên Khách Hàng</th>
+                                <th>Email</th>
+                                <th>Cấp bậc</th>
+                                <th>Số Đơn Đã Đặt</th>
+                                <th>Tổng Chi Tiêu</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody">
+                            <tr><td colspan="6" style="text-align: center;">Đang tải danh sách người dùng...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="productModal">
+        <div class="modal-content">
+            <h3 id="modalTitle">Thêm Sản Phẩm Mới</h3>
+            <form id="productForm">
+                <input type="hidden" id="productId">
+                <input type="text" id="name" placeholder="Tên sản phẩm" required>
+                <input type="number" id="price" placeholder="Giá tiền (VNĐ)" required>
+                
+                <label style="font-weight: bold; display: block; margin-bottom: 5px;">Chọn Danh Mục (Có thể chọn nhiều):</label>
+                <div id="categoryCheckboxes" style="margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; max-height: 100px; overflow-y: auto;">
+                    </div>
+
+                <input type="number" id="stock" placeholder="Số lượng trong kho" required>
+                <input type="text" id="image" placeholder="Link ảnh (URL)" value="https://via.placeholder.com/150">
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn-close" onclick="closeModal()">Hủy</button>
+                    <button type="submit" class="btn-save">💾 Lưu lại</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal-overlay" id="categoryModal">
+        <div class="modal-content">
+            <h3 id="catModalTitle">Thêm Danh Mục</h3>
+            <form id="categoryForm">
+                <input type="hidden" id="catId">
+                <input type="text" id="catName" placeholder="Tên danh mục (VD: Laptop, ASUS...)" required>
+                <input type="text" id="catDesc" placeholder="Mô tả ngắn">
+                <div class="modal-actions">
+                    <button type="button" class="btn-close" onclick="closeCategoryModal()">Hủy</button>
+                    <button type="submit" class="btn-save">💾 Lưu Danh Mục</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+    <script src="../js/admin.js"></script>
+</body>
+</html>

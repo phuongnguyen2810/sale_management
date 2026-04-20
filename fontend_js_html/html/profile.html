@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tài khoản của tôi</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; max-width: 900px; margin: auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; background: #343a40; color: white; padding: 15px 30px; border-radius: 5px; margin-bottom: 20px; }
+        .header a { color: #ffc107; text-decoration: none; font-weight: bold; }
+        
+        .profile-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .profile-card h2 { margin-top: 0; color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px; display: inline-block; }
+        
+        table { width: 100%; border-collapse: collapse; background: white; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #007bff; color: white; }
+        .status { padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: bold; color: white; }
+        .status.Pending { background: #ffc107; color: black; }
+        .status.Processing { background: #17a2b8; }
+        .status.Shipped { background: #007bff; }
+        .status.Canceled { background: #6c757d; text-decoration: line-through; }
+        .status.Delivered { background: #28a745; }
+        .btn-cancel {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 10px; /* Tạo khoảng cách với cái nhãn trạng thái */
+            transition: 0.3s;
+            display: inline-block;
+        }
+        .btn-cancel:hover {
+            background: #c82333; /* Đổi màu đậm hơn khi rê chuột vào */
+            transform: scale(1.05); /* Hiệu ứng phóng to nhẹ */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div>👤 <b id="displayUsername">Đang tải...</b></div>
+        <div>
+            <a href="index.html">🏠 Về Cửa Hàng</a> | 
+            <a href="#" onclick="logout()" style="color: #dc3545;">🚪 Đăng xuất</a>
+        </div>
+    </div>
+
+    <div class="profile-card">
+        <h2>Thông tin cá nhân</h2>
+        <p><b>Tên đăng nhập:</b> <span id="pUsername">...</span></p>
+        <p><b>Email liên hệ:</b> <span id="pEmail">...</span></p>
+        <p><b>Hạng thành viên:</b> <span id="pRole" style="text-transform: uppercase; color: #28a745; font-weight: bold;">...</span></p>
+    </div>
+
+    <h2>📦 Lịch sử Đơn Hàng Của Bạn</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Mã Đơn</th>
+                <th>Sản phẩm</th>
+                <th>Tổng Tiền</th>
+                <th>Ngày đặt</th>
+                <th>Lịch giao</th>
+                <th>Trạng Thái</th>
+            </tr>
+        </thead>
+        <tbody id="myOrdersTable">
+            <tr><td colspan="6" style="text-align: center;">Đang tải lịch sử đơn hàng...</td></tr>
+        </tbody>
+    </table>
+
+    <script>
+        const userId = localStorage.getItem('userId');
+
+        if (!userId) {
+            alert("Bạn cần đăng nhập để xem trang này!");
+            window.location.href = 'login.html';
+        }
+
+        // 1. Lấy thông tin cá nhân
+        async function fetchUserProfile() {
+            try {
+                const res = await fetch(`http://localhost:5000/api/users/user/${userId}`);
+                if (res.ok) {
+                    const user = await res.json();
+                    document.getElementById('displayUsername').innerText = user.username;
+                    document.getElementById('pUsername').innerText = user.username;
+                    document.getElementById('pEmail').innerText = user.email;
+                    document.getElementById('pRole').innerText = user.role;
+                }
+            } catch (err) { console.error(err); }
+        }
+
+        // 2. Lấy danh sách đơn hàng của TÔI
+        async function fetchMyOrders() {
+            try {
+                // Sử dụng API lấy đơn hàng theo User mà bạn đã viết ở orderRoutes.js
+                const res = await fetch(`http://localhost:5000/api/orders/user/${userId}`);
+                const orders = await res.json();
+                const tbody = document.getElementById('myOrdersTable');
+                
+                if (orders.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Bạn chưa có đơn hàng nào!</td></tr>';
+                    return;
+                }
+
+                // Dịch trạng thái sang Tiếng Việt
+                const statusMap = {
+                    'Pending': 'Chờ duyệt',
+                    'Processing': 'Đang đóng gói',
+                    'Shipped': 'Đang giao hàng',
+                    'Delivered': 'Đã nhận hàng',
+                    'Canceled': 'Đã hủy'
+                };
+
+                tbody.innerHTML = orders.map(order => {
+                    const productList = order.products.map(p => 
+                        `• ${p.product ? p.product.name : 'Sản phẩm đã bị xóa'} (x${p.quantity})`
+                    ).join('<br>');
+                    
+                    // Xử lý hiển thị ngày tháng
+                    const orderDate = new Date(order.createdAt).toLocaleDateString('vi-VN');
+                    const deliveryDate = order.deliveryDate ? new Date(order.deliveryDate).toLocaleDateString('vi-VN') : 'Chưa cập nhật';
+
+                    // LOGIC NÚT HỦY: Chỉ hiện khi trạng thái là Pending
+                    let actionButton = '';
+                    if (order.status === 'Pending') {
+                        actionButton = `<button onclick="cancelMyOrder('${order._id}')" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;" class="action-btn">Hủy đơn</button>`;
+                    }
+
+                    return `
+                        <tr>
+                            <td><small>${order._id.substring(order._id.length - 6).toUpperCase()}</small></td>
+                            <td>${productList}</td>
+                            <td style="color:#e44d26; font-weight:bold;">${order.totalAmount.toLocaleString()} đ</td>
+                            <td>${orderDate}</td>
+                            <td><small>${deliveryDate}<br>${order.deliveryTime || ''}</small></td>
+                            <td style="text-align: center;">
+                                <span class="status ${order.status}">${statusMap[order.status] || order.status}</span>
+                                <br><br>${actionButton}
+                            </td>
+                        </tr>
+                         `;
+                }).join('');
+            } catch (err) { 
+                console.error(err);
+                document.getElementById('myOrdersTable').innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">Lỗi tải dữ liệu!</td></tr>';
+            }
+        }
+// Hàm gọi API hủy đơn
+        async function cancelMyOrder(orderId) {
+            if (confirm("⚠️ Bạn có chắc chắn muốn hủy đơn hàng này không?")) {
+                try {
+                    const res = await fetch(`http://localhost:5000/api/orders/cancel/${orderId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    
+                    const data = await res.json();
+                    
+                    if (res.ok) {
+                        alert("✅ " + data.message);
+                        fetchMyOrders(); // Tải lại bảng đơn hàng để thấy nó đổi sang "Đã hủy"
+                    } else {
+                        alert("❌ Lỗi: " + data.message);
+                    }
+                } catch (err) {
+                    alert("Lỗi kết nối Server!");
+                }
+            }
+        }
+        
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'index.html';
+        }
+       // Chạy khởi tạo
+        fetchUserProfile();
+        fetchMyOrders();
+    </script>
+</body>
+</html>

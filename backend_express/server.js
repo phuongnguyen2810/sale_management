@@ -20,7 +20,10 @@ mongoose.connect(uri)
 
 
 // 4. Định nghĩa Route 
-app.use('/api/products', require('./routes/productRoutes'))
+app.use('/api/products', require('./src/routes/productRoutes')); // Bổ sung dòng này
+app.use('/api/users', require('./src/routes/userRoutes'));   // Bổ sung dòng này
+app.use('/api/orders', require('./src/routes/orderRoutes')); // Bổ sung dòng này
+app.use('/api/categories', require('./src/routes/categoryRoutes'));
 
 // 5. Khởi chạy Server
 const PORT = process.env.PORT || 5000;
