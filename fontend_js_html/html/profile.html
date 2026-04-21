@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Tài Khoản Cao Cấp</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/profile.css">
+
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg glass-header py-3">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fa-brands fa-space-awesome me-2"></i>MiniShop
+            </a>
+            
+            <div class="ms-auto d-flex align-items-center gap-3">
+                <div class="d-flex align-items-center bg-white rounded-pill shadow-sm px-3 py-2 border">
+                    <i class="fa-regular fa-circle-user text-primary fs-5 me-2"></i>
+                    <span class="fw-semibold me-3 text-dark" id="displayUsername">Đang tải...</span>
+                    <button class="btn btn-sm btn-light rounded-pill border text-danger fw-bold" onclick="logout()" title="Đăng xuất">
+                        <i class="fa-solid fa-power-off me-1"></i> Thoát
+                    </button>
+                </div>
+                <a href="index.html" class="btn btn-primary rounded-pill shadow-sm px-4 fw-semibold hidden-mobile">
+                    <i class="fa-solid fa-house me-1"></i> Trang Chủ
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row g-4">
+            
+            <div class="col-lg-4">
+                <div class="premium-card text-center">
+                    <div class="avatar-circle" id="avatarLetter">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <h3 class="fw-bold text-dark mb-1" id="pUsername">Đang tải...</h3>
+                    <p class="text-muted mb-4" id="pEmail">...</p>
+                    
+                    <div class="mb-4">
+                        <span class="badge-role" id="pRole"><i class="fa-solid fa-shield-halved me-1"></i> ...</span>
+                    </div>
+
+                    <hr class="text-muted opacity-25">
+                    
+                    <div class="d-flex justify-content-between text-start mt-4 px-3">
+                        <div>
+                            <p class="text-muted small mb-1">Trạng thái tài khoản</p>
+                            <p class="fw-bold text-success"><i class="fa-solid fa-circle-check me-1"></i> Đang hoạt động</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="premium-card">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="fw-bold m-0"><i class="fa-solid fa-box-open text-primary me-2"></i>Lịch Sử Mua Hàng</h4>
+                        <span class="badge bg-light text-dark border"><i class="fa-solid fa-clock-rotate-left me-1"></i> Cập nhật liên tục</span>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-orders table-borderless mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Mã Đơn</th>
+                                    <th>Sản phẩm</th>
+                                    <th class="text-end">Tổng Tiền</th>
+                                    <th>Thời gian</th>
+                                    <th class="text-center">Trạng Thái</th>
+                                </tr>
+                            </thead>
+                            <tbody id="myOrdersTable">
+                                <tr>
+                                    <td colspan="5" class="text-center py-5">
+                                        <div class="spinner-border text-primary" role="status"></div>
+                                        <p class="text-muted mt-2">Đang tải lịch sử đơn hàng...</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="../js/profile.js"></script>
+</body>
+</html>

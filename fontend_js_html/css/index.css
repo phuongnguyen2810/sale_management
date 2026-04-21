@@ -1,0 +1,155 @@
+:root {
+    --primary: #4f46e5;
+    --secondary: #ec4899;
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+}
+
+body { 
+    font-family: 'Plus Jakarta Sans', sans-serif; 
+    background: var(--bg-color);
+    background-image: radial-gradient(at 0% 0%, hsla(253,16%,7%,0.03) 0, transparent 50%), 
+                        radial-gradient(at 50% 0%, hsla(225,39%,30%,0.03) 0, transparent 50%), 
+                        radial-gradient(at 100% 0%, hsla(339,49%,30%,0.03) 0, transparent 50%);
+    color: var(--text-main);
+    padding-bottom: 50px;
+}
+
+/* Glassmorphism Header Siêu Nét */
+.glass-header {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.navbar-brand {
+    font-weight: 800;
+    font-size: 1.5rem;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.5px;
+}
+
+/* Thẻ Sản phẩm (Premium Card) */
+.product-card { 
+    background: var(--card-bg);
+    border: 1px solid rgba(0,0,0,0.04); 
+    border-radius: 24px; 
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.02);
+    position: relative;
+}
+
+.product-card:hover { 
+    transform: translateY(-8px); 
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08); 
+    border-color: rgba(79, 70, 229, 0.2);
+}
+
+/* Vùng chứa ảnh với nền xám nhẹ để tôn sản phẩm */
+.product-img-wrap {
+    background-color: #f1f5f9;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 24px 24px 0 0;
+    overflow: hidden;
+}
+
+.product-img { 
+    height: 200px; 
+    width: 100%;
+    object-fit: cover; 
+    border-radius: 12px;
+    transition: transform 0.5s ease;
+}
+
+.product-card:hover .product-img {
+    transform: scale(1.05);
+}
+
+.product-title { 
+    font-size: 1.15rem; 
+    font-weight: 700; 
+    color: var(--text-main); 
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.4;
+}
+
+.price { 
+    color: var(--primary); 
+    font-weight: 800; 
+    font-size: 1.3rem; 
+}
+
+/* Nút bấm Gradient Sang trọng */
+.btn-gradient {
+    background: linear-gradient(135deg, var(--primary) 0%, #818cf8 100%);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-weight: 600;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+}
+
+.btn-gradient:hover {
+    box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+    transform: translateY(-2px);
+    color: white;
+}
+
+/* Nút Giỏ hàng trên Menu */
+.btn-cart-glass {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0,0,0,0.1);
+    color: var(--text-main);
+    border-radius: 50px;
+    padding: 8px 24px;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+.btn-cart-glass:hover {
+    background: var(--text-main);
+    color: white;
+}
+.cart-badge {
+    background: var(--secondary);
+    top: -5px;
+    right: -5px;
+}
+
+/* Badges & Tags */
+.stock-badge {
+    background: rgba(245, 158, 11, 0.1);
+    color: #d97706;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* Animation khi load danh sách */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-item {
+    animation: fadeInUp 0.6s ease forwards;
+    opacity: 0;
+}

@@ -1,0 +1,235 @@
+:root {
+    --primary: #4f46e5;
+    --sidebar-bg: #0f172a;
+    --sidebar-hover: #1e293b;
+    --bg-color: #f8fafc;
+    --text-main: #0f172a;
+}
+
+body { 
+    font-family: 'Plus Jakarta Sans', sans-serif; 
+    background-color: var(--bg-color); 
+    margin: 0; 
+    overflow: hidden; /* Chống cuộn toàn trang, chỉ cuộn nội dung */
+}
+
+/* 1. GIAO DIỆN LOGIN KÍNH MỜ */
+#adminLogin {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100vh;
+    background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
+    display: flex; /* Mặc định ẩn theo code cũ của bạn là none, JS sẽ xử lý */
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.login-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 40px;
+    border-radius: 24px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+    text-align: center;
+}
+
+.login-card h2 { color: white; font-weight: 800; margin-bottom: 30px; }
+
+.login-card input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    border-radius: 12px;
+    padding: 14px 20px;
+}
+.login-card input::placeholder { color: #94a3b8; }
+.login-card input:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.25);
+    color: white;
+}
+
+.btn-login {
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    width: 100%;
+    margin-top: 10px;
+    transition: all 0.3s;
+}
+.btn-login:hover { background: #4338ca; transform: translateY(-2px); }
+
+/* 2. LAYOUT DASHBOARD */
+#adminDashboard {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+}
+
+/* SIDEBAR CAO CẤP */
+.sidebar { 
+    width: 280px; 
+    background: var(--sidebar-bg); 
+    color: #cbd5e1; 
+    display: flex; 
+    flex-direction: column; 
+    flex-shrink: 0;
+    box-shadow: 4px 0 15px rgba(0,0,0,0.05);
+    z-index: 10;
+}
+.sidebar h2 { 
+    text-align: center; 
+    padding: 25px 0; 
+    margin: 0;
+    color: white; 
+    font-size: 1.2rem; 
+    font-weight: 800;
+    border-bottom: 1px solid rgba(255,255,255,0.05); 
+    letter-spacing: 1px;
+}
+.sidebar-menu { flex: 1; padding: 20px 15px; overflow-y: auto; }
+
+.sidebar a { 
+    display: flex;
+    align-items: center;
+    padding: 14px 20px; 
+    color: #94a3b8; 
+    text-decoration: none; 
+    border-radius: 12px;
+    margin-bottom: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease; 
+}
+.sidebar a i { margin-right: 12px; font-size: 1.1rem; width: 20px; text-align: center; }
+.sidebar a:hover { background: var(--sidebar-hover); color: white; }
+.sidebar a.active { 
+    background: linear-gradient(135deg, var(--primary), #818cf8); 
+    color: white; 
+    box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+}
+
+.logout-menu { 
+    margin: 15px; 
+    background: rgba(239, 68, 68, 0.1); 
+    color: #ef4444; 
+    text-align: center; 
+    padding: 14px; 
+    border-radius: 12px;
+    cursor: pointer; 
+    font-weight: 700;
+    transition: all 0.3s;
+}
+.logout-menu:hover { background: #ef4444; color: white; }
+
+/* KHU VỰC NỘI DUNG */
+.main-content { 
+    flex: 1; 
+    padding: 30px 40px; 
+    overflow-y: auto; 
+    background: var(--bg-color);
+}
+
+.section-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-end; 
+    margin-bottom: 30px; 
+}
+.section-header h1 { color: var(--text-main); font-size: 1.8rem; font-weight: 800; margin: 0; }
+
+/* BẢNG DỮ LIỆU (PREMIUM TABLE) */
+.table-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+    padding: 20px;
+    border: 1px solid rgba(0,0,0,0.04);
+}
+table { width: 100%; border-collapse: collapse; }
+th { 
+    color: #64748b; 
+    font-weight: 600; 
+    font-size: 0.85rem; 
+    text-transform: uppercase; 
+    padding: 15px; 
+    border-bottom: 2px solid #f1f5f9; 
+}
+td { 
+    padding: 15px; 
+    vertical-align: middle; 
+    border-bottom: 1px solid #f1f5f9; 
+    color: #334155;
+    font-weight: 500;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background-color: #f8fafc; }
+
+/* Ảnh SP & Nút thao tác */
+img.thumb { width: 48px; height: 48px; object-fit: cover; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+.action-btn { 
+    padding: 6px 12px; 
+    border: none; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    color: white; 
+    font-size: 13px; 
+    font-weight: 600;
+    transition: transform 0.2s;
+}
+.action-btn:hover { transform: scale(1.05); }
+.btn-edit { background: #f59e0b; }
+.btn-delete { background: #ef4444; }
+
+/* BỘ LỌC VÀ TÌM KIẾM */
+.filter-group { display: flex; gap: 15px; align-items: center; }
+.form-control, .form-select {
+    border-radius: 10px;
+    padding: 10px 15px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    font-weight: 500;
+}
+.form-control:focus, .form-select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
+
+.btn-add { 
+    background: linear-gradient(135deg, #10b981, #059669); 
+    color: white; 
+    padding: 10px 20px; 
+    border: none; 
+    border-radius: 10px; 
+    cursor: pointer; 
+    font-weight: bold; 
+    box-shadow: 0 4px 10px rgba(16,185,129,0.2);
+    transition: all 0.3s;
+}
+.btn-add:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(16,185,129,0.3); }
+
+/* CUSTOM MODAL CỦA BẠN (Được nâng cấp UI) */
+.modal-overlay { 
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+    background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(5px);
+    justify-content: center; align-items: center; z-index: 9999; 
+}
+.modal-content { 
+    background: white; padding: 30px; border-radius: 20px; width: 100%; max-width: 500px; 
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2); border: none;
+}
+.modal-content h3 { margin-bottom: 20px; color: var(--text-main); font-weight: 800; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px;}
+.modal-content input { 
+    width: 100%; padding: 12px 15px; margin-bottom: 15px; 
+    border: 1px solid #e2e8f0; border-radius: 10px; background: #f8fafc;
+}
+.modal-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 10px; }
+.btn-close { background: #f1f5f9; color: #64748b; padding: 10px 20px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.2s;}
+.btn-close:hover { background: #e2e8f0; color: #334155; }
+.btn-save { background: var(--primary); color: white; padding: 10px 20px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.2s;}
+.btn-save:hover { background: #4338ca; }

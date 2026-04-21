@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Hệ Thống Quản Trị</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+
+    <div id="adminLogin" style="display: none;"> <div class="login-card">
+            <div class="mb-4 text-primary" style="font-size: 3rem;"><i class="fa-solid fa-user-shield"></i></div>
+            <h2>Admin Portal</h2>
+            <form id="loginForm">
+                <input type="email" id="adminEmail" class="form-control mb-3" placeholder="Email Quản trị" required>
+                <input type="password" id="adminPassword" class="form-control mb-4" placeholder="Mật khẩu" required>
+                <button type="submit" class="btn-login">Đăng Nhập <i class="fa-solid fa-arrow-right-to-bracket ms-2"></i></button>
+            </form>
+            <p class="mt-4" style="font-size: 13px; color: #94a3b8;">
+                <i class="fa-solid fa-lock me-1"></i> Khu vực hạn chế. Dành riêng cho Quản trị viên.
+            </p>
+        </div>
+    </div>
+
+    <div id="adminDashboard" style="display: flex;"> <aside class="sidebar">
+            <h2><i class="fa-brands fa-space-awesome text-primary me-2"></i>MINISHOP</h2>
+            
+            <div class="sidebar-menu">
+                <a href="javascript:void(0)" onclick="showSection('productSection')" id="nav-prod" class="active">
+                    <i class="fa-solid fa-box-open"></i> Sản phẩm
+                </a>
+                <a href="javascript:void(0)" onclick="showSection('categorySection')" id="nav-cat">
+                    <i class="fa-solid fa-tags"></i> Danh mục
+                </a>
+                <a href="javascript:void(0)" onclick="showSection('orderSection')" id="nav-order">
+                    <i class="fa-solid fa-cart-flatbed"></i> Đơn hàng
+                </a>
+                <a href="javascript:void(0)" onclick="showSection('userSection')" id="nav-user">
+                    <i class="fa-solid fa-users"></i> Khách hàng
+                </a>
+                
+                <hr class="border-secondary opacity-25 my-4">
+                
+                <a href="index.html" target="_blank">
+                    <i class="fa-solid fa-store"></i> Xem Cửa hàng
+                </a>
+            </div>
+
+            <div class="logout-menu" onclick="logoutAdmin()">
+                <i class="fa-solid fa-power-off me-2"></i> Đăng xuất
+            </div>
+        </aside>
+
+        <main class="main-content">
+            
+            <section id="productSection">
+                <div class="section-header">
+                    <div>
+                        <h1 class="mb-2">Quản lý Sản Phẩm</h1>
+                        <p class="text-muted small m-0">Thêm, sửa, xóa thông tin hàng hóa</p>
+                    </div>
+                    <button class="btn-add" onclick="openModal()"><i class="fa-solid fa-plus me-1"></i> Thêm Sản Phẩm</button>
+                </div>
+
+                <div class="table-card">
+                    <div class="filter-group mb-4">
+                        <select id="productCategoryFilter" class="form-select w-auto" onchange="loadProducts()">
+                            <option value="ALL">Tất cả danh mục</option>
+                        </select>
+                        <div class="input-group" style="max-width: 300px;">
+                            <span class="input-group-text bg-white border-end-0 text-muted"><i class="fa-solid fa-magnifying-glass"></i></span>
+                            <input type="text" id="productSearch" class="form-control border-start-0 ps-0" onkeyup="loadProducts()" placeholder="Tìm tên sản phẩm...">
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Hình ảnh</th>
+                                    <th>Tên SP</th>
+                                    <th>Danh mục</th>
+                                    <th>Giá bán</th>
+                                    <th>Tồn kho</th>
+                                    <th class="text-center">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productTableBody">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="categorySection" style="display: none;">
+                <div class="section-header">
+                    <div>
+                        <h1 class="mb-2">Quản lý Danh Mục</h1>
+                        <p class="text-muted small m-0">Phân loại sản phẩm hệ thống</p>
+                    </div>
+                    <button class="btn-add" onclick="openCategoryModal()"><i class="fa-solid fa-folder-plus me-1"></i> Tạo Danh Mục</button>
+                </div>
+
+                <div class="table-card">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Tên Danh Mục</th>
+                                    <th>Mô tả chi tiết</th>
+                                    <th class="text-center">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="categoryTableBody">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="orderSection" style="display: none;">
+                <div class="section-header">
+                    <div>
+                        <h1 class="mb-2">Quản lý Đơn Hàng</h1>
+                        <p class="text-muted small m-0">Theo dõi trạng thái giao hàng</p>
+                    </div>
+                </div>
+
+                <div class="table-card">
+                    <div class="filter-group mb-4 d-flex justify-content-between">
+                        <div class="d-flex gap-3">
+                            <select id="orderStatusFilter" class="form-select w-auto" onchange="loadOrdersTable()">
+                                <option value="ALL">Tất cả trạng thái</option>
+                                <option value="Pending">Chờ duyệt</option>
+                                <option value="Processing">Đang gói hàng</option>
+                                <option value="Shipped">Đang giao</option>
+                                <option value="Delivered">Đã giao</option>
+                                <option value="Canceled">Đã hủy</option>
+                            </select>
+                            <div class="input-group" style="width: 250px;">
+                                <span class="input-group-text bg-white border-end-0 text-muted"><i class="fa-solid fa-phone"></i></span>
+                                <input type="text" id="orderPhoneSearch" class="form-control border-start-0 ps-0" onkeyup="loadOrdersTable()" placeholder="Tra cứu SĐT khách...">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Mã Đơn</th>
+                                    <th>Khách hàng</th>
+                                    <th>Chi tiết SP</th>
+                                    <th class="text-danger">Tổng tiền</th>
+                                    <th>Trạng thái</th>
+                                    <th class="text-center">Cập nhật</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orderTableBody">
+                                <tr><td colspan="6" class="text-center py-4 text-muted">Đang tải dữ liệu đơn hàng...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="userSection" style="display: none;">
+                <div class="section-header">
+                    <div>
+                        <h1 class="mb-2">Quản lý Khách Hàng</h1>
+                        <p class="text-muted small m-0">Thống kê tài khoản & chi tiêu</p>
+                    </div>
+                </div>
+
+                <div class="table-card">
+                    <div class="filter-group mb-4">
+                        <select id="userRoleFilter" class="form-select w-auto" onchange="loadUsersTable()">
+                            <option value="ALL">Tất cả cấp bậc</option>
+                            <option value="admin">Quản trị viên (Admin)</option>
+                            <option value="customer">Khách hàng</option>
+                        </select>
+                        <div class="input-group" style="width: 300px;">
+                            <span class="input-group-text bg-white border-end-0 text-muted"><i class="fa-regular fa-envelope"></i></span>
+                            <input type="text" id="userEmailSearch" class="form-control border-start-0 ps-0" onkeyup="loadUsersTable()" placeholder="Tìm kiếm Email người dùng...">
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Tài khoản</th>
+                                    <th>Email liên hệ</th>
+                                    <th>Phân quyền</th>
+                                    <th class="text-center">Số đơn mua</th>
+                                    <th class="text-end">Đã chi tiêu</th>
+                                    <th class="text-center">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userTableBody">
+                                <tr><td colspan="6" class="text-center py-4 text-muted">Đang phân tích dữ liệu khách hàng...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="productModal">
+        <div class="modal-content">
+            <h3 id="modalTitle"><i class="fa-solid fa-box text-primary me-2"></i>Thêm Sản Phẩm</h3>
+            <form id="productForm">
+                <input type="hidden" id="productId">
+                <input type="text" id="name" placeholder="Tên sản phẩm" required>
+                <input type="number" id="price" placeholder="Giá tiền (VNĐ)" required>
+                
+                <label class="form-label text-muted fw-bold small">Chọn Danh Mục:</label>
+                <div id="categoryCheckboxes" class="p-3 mb-3 border rounded bg-light" style="max-height: 120px; overflow-y: auto;">
+                    </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <input type="number" id="stock" placeholder="Tồn kho" required>
+                    </div>
+                    <div class="col-6">
+                        <input type="text" id="image" placeholder="URL Hình ảnh" value="https://via.placeholder.com/150">
+                    </div>
+                </div>
+                
+                <div class="modal-actions mt-3">
+                    <button type="button" class="btn-close" onclick="closeModal()">Hủy</button>
+                    <button type="submit" class="btn-save"><i class="fa-solid fa-floppy-disk me-1"></i> Lưu Dữ Liệu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="categoryModal">
+        <div class="modal-content">
+            <h3 id="catModalTitle"><i class="fa-solid fa-tags text-primary me-2"></i>Thêm Danh Mục</h3>
+            <form id="categoryForm">
+                <input type="hidden" id="catId">
+                <input type="text" id="catName" placeholder="Tên danh mục (VD: Laptop, Áo thun...)" required>
+                <textarea id="catDesc" class="form-control mb-3 bg-light" rows="3" placeholder="Mô tả ngắn gọn..."></textarea>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn-close" onclick="closeCategoryModal()">Hủy</button>
+                    <button type="submit" class="btn-save"><i class="fa-solid fa-floppy-disk me-1"></i> Lưu Danh Mục</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/admin.js"></script>
+</body>
+</html>
