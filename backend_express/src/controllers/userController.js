@@ -8,7 +8,7 @@ exports.createUser = async (req, res) => {
             username: req.body.username,
             email: req.body.email,
             password: req.body.password,
-            role: 'customer' // ÉP CỨNG Ở ĐÂY, ai đăng ký cũng chỉ là khách!
+            role: 'admin' // ÉP CỨNG Ở ĐÂY, ai đăng ký cũng chỉ là khách!
         });
         const savedUser = await user.save();
         res.status(201).json(savedUser);

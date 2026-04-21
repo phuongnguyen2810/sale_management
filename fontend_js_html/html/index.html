@@ -3,164 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cửa hàng Online mini</title>
-    <style>
-        /* CSS cơ bản cho đẹp mắt */
-        body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; }
-        h1 { text-align: center; color: #333; }
-        .product-grid { 
-            display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; 
-        }
-        .product-card { 
-            background: white; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
-            padding: 15px; width: 220px; text-align: center; 
-        }
-        .product-card img { width: 100%; height: 150px; object-fit: cover; border-radius: 5px; }
-        .product-card h3 { font-size: 18px; margin: 10px 0; color: #0056b3; }
-        .price { color: #e44d26; font-weight: bold; font-size: 16px; margin-bottom: 15px; }
-        button { 
-            background: #28a745; color: white; border: none; padding: 10px 15px; 
-            border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold;
-        }
-        button:hover { background: #218838; }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #7e6969;
-            color: white;
-            padding: 10px 30px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-        }
-        .user-info b { color: #ffc107; }
-        .logout-btn {
-            margin-left: 15px;
-            background: #dc3545;
-            padding: 3px 8px;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-        .cart-icon {
-            background: #e44d26;
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .cart-icon:hover { background: #ff5722; }
-    </style>
+    <title>Cửa hàng MiniShop</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/index.css">
+
 </head>
 <body>
-    <div class="header">
-    <div id="userInfo" class="user-info">
+
+    <nav class="navbar navbar-expand-lg glass-header py-3">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fa-brands fa-space-awesome me-2"></i>MiniShop
+            </a>
+            
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <i class="fa-solid fa-bars fs-3 text-dark"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <div class="ms-auto d-flex flex-column flex-lg-row align-items-center gap-3 mt-3 mt-lg-0" id="userInfo">
+                    </div>
+
+                <button class="btn btn-cart-glass position-relative ms-lg-3 mt-3 mt-lg-0" onclick="window.location.href='cart.html'">
+                    <i class="fa-solid fa-bag-shopping me-1"></i> Giỏ hàng
+                    <span class="position-absolute translate-middle badge rounded-pill cart-badge" id="cartCount">0</span>
+                </button>
+            </div>
         </div>
-    <div class="cart-icon" onclick="window.location.href='cart.html'">
-        🛒 Giỏ hàng (<span id="cartCount">0</span>)
-    </div>
-</div>
-    <h1>🛍️ Danh sách Sản phẩm</h1>
-    
-    <div id="productList" class="product-grid">
-        <p>Đang tải dữ liệu từ Server...</p>
-    </div>
+    </nav>
 
-    <script>
-        // Hàm gọi API lấy dữ liệu
-    async function fetchProducts() {
-            try {
-                // Gọi tới server Node.js của bạn đang chạy ở cổng 5000
-                const response = await fetch('http://localhost:5000/api/products/all');
-                const products = await response.json();
-                
-                const productListDiv = document.getElementById('productList');
-                productListDiv.innerHTML = ''; // Xóa chữ "Đang tải..."
-                
-                // Vòng lặp rải từng sản phẩm ra màn hình
-                products.forEach(p => {
-                    productListDiv.innerHTML += `
-                        <div class="product-card">
-                            <img src="${p.image}" alt="${p.name}">
-                            <h3>${p.name}</h3>
-                            <p class="price">${p.price.toLocaleString('vi-VN')} VNĐ</p>
-                            <p>Kho: ${p.stock}</p>
-                            <button onclick="addToCart('${p._id}', '${p.name}', ${p.price})">🛒 Thêm vào giỏ</button>
-                        </div>
-                    `;
-                });
-            } catch (error) {
-                console.error("Lỗi rồi:", error);
-                document.getElementById('productList').innerHTML = '<p style="color:red;">Không thể kết nối đến Server. Bạn đã chạy node server.js chưa?</p>';
-            }
-        }
-
-        // 1. Hàm hiển thị thông tin người dùng
-    function checkLogin() {
-        const username = localStorage.getItem('username'); // Bạn nhớ lưu username lúc login nhé
-        const userId = localStorage.getItem('userId');
-        const userInfoDiv = document.getElementById('userInfo');
-
-        if (userId) {
-            userInfoDiv.innerHTML = `Chào, <b>${username}</b> 
-                                    <a href="profile.html" class="profile-btn">👤 Tài khoản</a>
-                                    <span class="logout-btn" onclick="logout()">Đăng xuất</span>`;} else {
-            userInfoDiv.innerHTML = `<a href="login.html" style="color:white; text-decoration:none;">Đăng nhập ngay</a>`;
-        }
-    }
-
-    // 2. Hàm cập nhật số lượng trên icon giỏ hàng
-    function updateCartCount() {
-        const userId = localStorage.getItem('userId');
-        if (!userId) return;
-
-        const cartKey = `cart_${userId}`;
-        const cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+    <div class="container mt-5 pt-3">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold" style="font-size: 2.5rem; letter-spacing: -1px;">Sản Phẩm Nổi Bật</h2>
+            <p class="text-muted fs-5">Khám phá bộ sưu tập tuyệt vời nhất dành cho bạn</p>
+        </div>
         
-        // Tính tổng số lượng (quantity) của tất cả món hàng
-        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-        document.getElementById('cartCount').innerText = totalItems;
-    }
+        <div id="productList" class="row g-4 justify-content-center">
+            <div class="col-12 text-center py-5">
+                <div class="spinner-grow text-primary" role="status" style="width: 3rem; height: 3rem;">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    // 3. Hàm Đăng xuất
-    function logout() {
-        localStorage.removeItem('userId');
-        localStorage.removeItem('userRole');
-        localStorage.removeItem('username');
-        window.location.reload(); // Load lại trang để cập nhật giao diện
-    }
-        // Hàm click nút Thêm vào giỏ (Tạm thời in ra alert)
-        // Hàm lưu sản phẩm vào Giỏ hàng (localStorage)
-        function addToCart(productId, name, price) {
-        const userId = localStorage.getItem('userId');
-            
-            if (!userId) {
-                alert("Vui lòng đăng nhập để mua hàng!");
-                window.location.href = 'login.html';
-                return;
-            }
-
-            // Tạo tên giỏ hàng riêng biệt: cart_65a1b2...
-            const cartKey = `cart_${userId}`; 
-            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
-            
-            let existingItem = cart.find(item => item.product === productId);
-            if (existingItem) {
-                existingItem.quantity += 1;
-            } else {
-                cart.push({ product: productId, name, price, quantity: 1 });
-            }
-            
-            localStorage.setItem(cartKey, JSON.stringify(cart));
-            updateCartCount();
-            alert("Đã thêm vào giỏ hàng riêng của bạn!");
-        }
-
-        // Chạy hàm ngay khi mở trang web
-        checkLogin();
-        updateCartCount();  
-        fetchProducts();
-    </script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/index.js"></script>
 </body>
 </html>

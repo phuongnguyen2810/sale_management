@@ -1,8 +1,4 @@
 const API_URL = 'http://localhost:5000/api/products';
-
-
-
-
 // Hàm kiểm tra trạng thái khi vừa vào trang
 async function checkAdminAuth() {
     const userId = localStorage.getItem('userId');

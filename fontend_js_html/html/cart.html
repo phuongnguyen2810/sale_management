@@ -3,255 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giỏ Hàng Của Bạn</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; max-width: 800px; margin: auto; }
-        h1, h2 { text-align: center; color: #333; }
-        
-        table { width: 100%; border-collapse: collapse; background: white; margin-bottom: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; vertical-align: middle; }
-        th { background-color: #007bff; color: white; }
-        
-        .total-box { text-align: right; font-size: 20px; font-weight: bold; color: #e44d26; margin-bottom: 20px; }
-        
-        .checkout-form { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        .checkout-form input { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        .checkout-form button { width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 4px; font-size: 16px; font-weight: bold; cursor: pointer; }
-        .checkout-form button:hover { background: #218838; }
-        
-        .btn-clear { background: #dc3545; color: white; padding: 8px 12px; border: none; cursor: pointer; border-radius: 4px; font-weight: bold; }
-        
-        /* CSS mới cho các nút trong bảng */
-        .btn-qty { background: #e2e6ea; border: 1px solid #ccc; padding: 5px 10px; cursor: pointer; border-radius: 4px; font-weight: bold; }
-        .btn-qty:hover { background: #d2d6da; }
-        .qty-text { padding: 0 10px; font-weight: bold; }
-        .btn-remove { background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
-        .btn-remove:hover { background: #c82333; }
-        /* Thêm CSS cho nút Profile */
-        .profile-btn {
-            margin-left: 15px;
-            background: #17a2b8; /* Màu xanh biển nhạt */
-            color: white;
-            text-decoration: none;
-            padding: 3px 8px;
-            border-radius: 3px;
-            font-size: 12px;
-            font-weight: normal;
-        }
-        .profile-btn:hover { background: #138496; }
-    </style>
+    <title>Giỏ Hàng</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/cart.css">
+
 </head>
 <body>
 
-    <h1>🛒 Giỏ Hàng Của Bạn</h1>
-    <a href="index.html" style="display: block; margin-bottom: 20px; color: #007bff; text-decoration: none; font-weight: bold;">⬅️ Quay lại mua sắm</a>
+    <nav class="navbar navbar-expand-lg glass-header py-3">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fa-brands fa-space-awesome me-2"></i>MiniShop
+            </a>
+            <a href="index.html" class="btn btn-light rounded-pill border shadow-sm px-4 fw-semibold">
+                <i class="fa-solid fa-arrow-left me-2"></i> Tiếp tục mua sắm
+            </a>
+        </div>
+    </nav>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Tên SP</th>
-                <th>Đơn giá</th>
-                <th style="text-align: center;">Số lượng</th>
-                <th>Thành tiền</th>
-                <th>Thao tác</th>
-            </tr>
-        </thead>
-        <tbody id="cartTableBody">
-            </tbody>
-    </table>
+    <div class="container mt-5">
+        <h2 class="fw-bold mb-4"><i class="fa-solid fa-cart-shopping me-2"></i>Giỏ Hàng Của Bạn</h2>
 
-    <div class="total-box">
-        Tổng cộng: <span id="totalAmount">0</span> VNĐ
-        <br><br>
-        <button class="btn-clear" onclick="clearCart()">🗑️ Xóa sạch giỏ hàng</button>
-    </div>
-
-    <div class="checkout-form">
-        <h2>Thông tin giao hàng chi tiết</h2>
-        <form id="checkoutForm">
-            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                <div style="flex: 1;">
-                    <label>Người nhận:</label>
-                    <input type="text" id="receiverName" placeholder="Tên người nhận" required>
-                </div>
-                <div style="flex: 1;">
-                    <label>Số điện thoại:</label>
-                    <input type="tel" id="phone" placeholder="Ví dụ: 0987654321" required>
-                </div>
-            </div>
-
-            <label>Địa chỉ nhận hàng chính xác:</label>
-            <input type="text" id="address" placeholder="Số nhà, đường, phường/xã, quận/huyện..." required>
-
-            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                <div style="flex: 1;">
-                    <label>Ngày giao hàng mong muốn:</label>
-                    <input type="date" id="deliveryDate" required>
-                </div>
-                <div style="flex: 1;">
-                    <label>Giờ giao hàng (Tùy chọn):</label>
-                    <input type="time" id="deliveryTime">
+        <div class="row g-4">
+            <div class="col-lg-7 col-xl-8">
+                <div class="premium-card">
+                    <div class="table-responsive">
+                        <table class="table table-cart table-borderless mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Sản phẩm</th>
+                                    <th>Đơn giá</th>
+                                    <th class="text-center">Số lượng</th>
+                                    <th class="text-end">Thành tiền</th>
+                                    <th class="text-center">Xóa</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cartTableBody">
+                                </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="mt-4 pt-3 border-top text-end">
+                        <button class="btn btn-outline-danger rounded-pill px-4" onclick="clearCart()">
+                            <i class="fa-solid fa-trash-can me-2"></i>Xóa sạch giỏ hàng
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <label>Ghi chú cho shipper (Tùy chọn):</label>
-            <input type="text" id="notes" placeholder="Ví dụ: Gọi trước khi giao 30 phút, Giao giờ hành chính...">
+            <div class="col-lg-5 col-xl-4">
+                <div class="premium-card position-sticky" style="top: 100px;">
+                    <h4 class="fw-bold mb-4">Tổng Hợp Đơn Hàng</h4>
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+                        <span class="text-muted fw-semibold">Tổng cộng:</span>
+                        <span class="total-price"><span id="totalAmount">0</span> ₫</span>
+                    </div>
 
-            <button type="submit">✅ Xác Nhận Đặt Hàng</button>
-        </form>
+                    <h5 class="fw-bold mb-3 fs-6"><i class="fa-solid fa-truck-fast me-2"></i>Thông tin giao hàng</h5>
+                    
+                    <form id="checkoutForm">
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="receiverName" placeholder="Tên" required>
+                                    <label>Tên người nhận</label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-floating">
+                                    <input type="tel" class="form-control" id="phone" placeholder="SĐT" required>
+                                    <label>Số điện thoại</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="address" placeholder="Địa chỉ" required>
+                            <label>Địa chỉ nhận hàng chính xác</label>
+                        </div>
+
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <div class="form-floating">
+                                    <input type="date" class="form-control" id="deliveryDate" required>
+                                    <label>Ngày giao</label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-floating">
+                                    <input type="time" class="form-control" id="deliveryTime">
+                                    <label>Giờ giao</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <textarea class="form-control" id="notes" placeholder="Ghi chú" style="height: 80px"></textarea>
+                            <label>Ghi chú cho shipper (Tùy chọn)</label>
+                        </div>
+
+                        <button type="submit" class="btn btn-checkout w-100">
+                            Xác Nhận Đặt Hàng <i class="fa-solid fa-circle-check ms-2"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <script>
-        // Hàm lấy key giỏ hàng chuẩn xác của User đang đăng nhập
-        function getCartKey() {
-            const userId = localStorage.getItem('userId');
-            return userId ? `cart_${userId}` : null;
-        }
-
-        // 1. Hàm load giỏ hàng lên màn hình
-        function loadCart() {
-            const cartKey = getCartKey();
-            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
-            let tbody = document.getElementById('cartTableBody');
-            let total = 0;
-            
-            tbody.innerHTML = ''; 
-            
-            if (!cartKey || cart.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Giỏ hàng đang trống!</td></tr>';
-                document.getElementById('totalAmount').innerText = '0';
-                return 0;
-            }
-
-            cart.forEach(item => {
-                let itemTotal = item.price * item.quantity;
-                total += itemTotal;
-                
-                // Thêm các nút +, -, và Xóa vào HTML
-                tbody.innerHTML += `
-                    <tr>
-                        <td><b>${item.name}</b></td>
-                        <td>${item.price.toLocaleString('vi-VN')} đ</td>
-                        <td style="text-align: center;">
-                            <button class="btn-qty" onclick="updateQuantity('${item.product}', -1)">-</button>
-                            <span class="qty-text">${item.quantity}</span>
-                            <button class="btn-qty" onclick="updateQuantity('${item.product}', 1)">+</button>
-                        </td>
-                        <td style="color: #e44d26; font-weight: bold;">${itemTotal.toLocaleString('vi-VN')} đ</td>
-                        <td>
-                            <button class="btn-remove" onclick="removeItem('${item.product}')">Xóa</button>
-                        </td>
-                    </tr>
-                `;
-            });
-            
-            document.getElementById('totalAmount').innerText = total.toLocaleString('vi-VN');
-            return total; 
-        }
-
-        // 2. CHỨC NĂNG MỚI: Cập nhật số lượng (+ / -)
-        function updateQuantity(productId, change) {
-            const cartKey = getCartKey();
-            if (!cartKey) return;
-
-            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
-            let itemIndex = cart.findIndex(item => item.product === productId);
-
-            if (itemIndex !== -1) {
-                cart[itemIndex].quantity += change;
-                
-                // Nếu số lượng tụt xuống 0 thì xóa luôn món đó
-                if (cart[itemIndex].quantity <= 0) {
-                    cart.splice(itemIndex, 1);
-                }
-                
-                localStorage.setItem(cartKey, JSON.stringify(cart));
-                loadCart(); // Tải lại bảng ngay lập tức
-            }
-        }
-
-        // 3. CHỨC NĂNG MỚI: Xóa từng món
-        function removeItem(productId) {
-            const cartKey = getCartKey();
-            if (!cartKey) return;
-
-            if(confirm("Bạn muốn bỏ sản phẩm này khỏi giỏ hàng?")) {
-                let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
-                // Lọc bỏ sản phẩm có ID trùng với ID muốn xóa
-                cart = cart.filter(item => item.product !== productId);
-                
-                localStorage.setItem(cartKey, JSON.stringify(cart));
-                loadCart();
-            }
-        }
-
-        // 4. Xóa sạch giỏ hàng (Đã fix lỗi key)
-        function clearCart() {
-            const cartKey = getCartKey();
-            if (!cartKey) return;
-
-            if(confirm("Bạn có chắc muốn xóa hết giỏ hàng?")) {
-                localStorage.removeItem(cartKey);
-                loadCart();
-            }
-        }
-
-        // 5. Xử lý Đặt hàng (Đã fix lỗi key)
-        document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const currentUserId = localStorage.getItem('userId');
-            if (!currentUserId) {
-                alert("Bạn phải đăng nhập trước khi thanh toán!");
-                window.location.href = 'login.html'; // Hoặc 'auth.html' tùy tên file bạn đặt
-                return; 
-            }
-
-            const cartKey = `cart_${currentUserId}`;
-            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
-            
-            if (cart.length === 0) {
-                alert("Giỏ hàng trống, hãy mua gì đó đi!");
-                return;
-            }
-
-            let total = loadCart();
-
-            const orderData = {
-                user: currentUserId, 
-                products: cart.map(item => ({
-                    product: item.product, 
-                    quantity: item.quantity
-                })),
-                shippingAddress: document.getElementById('address').value,
-                receiverName: document.getElementById('receiverName').value,
-                phone: document.getElementById('phone').value,
-                deliveryDate: document.getElementById('deliveryDate').value,
-                deliveryTime: document.getElementById('deliveryTime').value,
-                notes: document.getElementById('notes').value
-            };
-
-            try {
-                const res = await fetch('http://localhost:5000/api/orders/add', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(orderData)
-                });
-
-                if (res.ok) {
-                    alert("🎉 Đặt hàng thành công! Cảm ơn bạn.");
-                    localStorage.removeItem(cartKey); // Fix: Xóa đúng giỏ hàng của User này
-                    window.location.href = 'index.html'; 
-                } else {
-                    const err = await res.json();
-                    alert("Lỗi: " + err.message);
-                }
-            } catch (error) {
-                alert("Lỗi kết nối Server!");
-            }
-        });
-
-        loadCart();
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/cart.js"></script>
 </body>
 </html>

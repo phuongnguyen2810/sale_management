@@ -3,94 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng Nhập</title>
-    <style>
-        body { font-family: Arial; background: #f4f4f9; display: flex; justify-content: center; padding-top: 50px; }
-        .login-box { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 300px; text-align: center; }
-        input { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
-        .toggle-link { margin-top: 15px; font-size: 13px; color: #007bff; cursor: pointer; text-decoration: underline; }
-    </style>
+    <title>Xác thực Tài khoản</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/login.css">
+
 </head>
 <body>
-    <div class="login-box">
-        <h2 id="formHeader">Đăng Nhập</h2>
+
+    <div class="auth-card">
+        <a href="index.html" class="btn-back" title="Quay lại Trang chủ"><i class="fa-solid fa-arrow-left"></i></a>
+        
+        <div class="brand-logo"><i class="fa-brands fa-space-awesome me-2"></i>MiniShop</div>
+        <h4 class="text-center fw-bold mb-4" id="formHeader">Đăng Nhập</h4>
+        
         <form id="loginForm">
-            <input type="text" id="username" placeholder="Tên đăng nhập" style="display: none;">
+            <div class="position-relative mb-3" id="usernameWrapper" style="display: none;">
+                <i class="fa-solid fa-user input-icon"></i>
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="username" placeholder="Tên đăng nhập">
+                    <label for="username">Tên người dùng</label>
+                </div>
+            </div>
             
-            <input type="email" id="email" placeholder="Email của bạn" required>
-            <input type="password" id="password" placeholder="Mật khẩu" required>
-            <button type="submit" id="submitBtn">Đăng Nhập</button>
+            <div class="position-relative mb-3">
+                <i class="fa-solid fa-envelope input-icon"></i>
+                <div class="form-floating">
+                    <input type="email" class="form-control" id="email" placeholder="Email" required>
+                    <label for="email">Địa chỉ Email</label>
+                </div>
+            </div>
+            
+            <div class="position-relative mb-4">
+                <i class="fa-solid fa-lock input-icon"></i>
+                <div class="form-floating">
+                    <input type="password" class="form-control" id="password" placeholder="Mật khẩu" required>
+                    <label for="password">Mật khẩu</label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn">Đăng Nhập <i class="fa-solid fa-arrow-right-to-bracket ms-2"></i></button>
         </form>
-        <div class="toggle-link" id="toggleBtn" onclick="toggleAuth()">Chưa có tài khoản? Đăng ký ngay</div>
+
+        <div class="toggle-text">
+            <span id="toggleTextLabel">Chưa có tài khoản?</span> 
+            <span class="toggle-link" onclick="toggleAuth()" id="toggleBtn">Đăng ký ngay</span>
+        </div>
     </div>
 
-    <script>
-        let isLogin = true; // Biến để kiểm tra trạng thái
-
-        // Hàm để đổi giao diện
-        function toggleAuth() {
-            isLogin = !isLogin;
-            const header = document.getElementById('formHeader');
-            const btn = document.getElementById('submitBtn');
-            const toggle = document.getElementById('toggleBtn');
-            const userInp = document.getElementById('username');
-
-            if (isLogin) {
-                header.innerText = "Đăng Nhập";
-                btn.innerText = "Đăng Nhập";
-                btn.style.background = "#007bff";
-                toggle.innerText = "Chưa có tài khoản? Đăng ký ngay";
-                userInp.style.display = "none";
-                userInp.required = false;
-            } else {
-                header.innerText = "Đăng Ký";
-                btn.innerText = "Tạo Tài Khoản";
-                btn.style.background = "#28a745";
-                toggle.innerText = "Đã có tài khoản? Đăng nhập";
-                userInp.style.display = "block";
-                userInp.required = true;
-            }
-        }
-
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const username = document.getElementById('username').value;
-            // Tự động đổi Link API dựa theo chế độ isLogin
-            const path = isLogin ? 'login' : 'register'; 
-            const url = `http://localhost:5000/api/users/${path}`;
-
-            // Tạo cục dữ liệu để gửi đi
-            const bodyData = isLogin 
-                ? { email, password } 
-                : { username, email, password, role: 'customer' };
-            try {
-                const res = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(bodyData)
-                });
-
-                const data = await res.json();
-
-                if (res.ok) {
-                    if (isLogin) {
-                        alert(`Chào mừng ${data.user.username}!`);
-                        localStorage.setItem('userId', data.user.id);
-                        localStorage.setItem('userRole', data.user.role);
-                        localStorage.setItem('username', data.user.username);
-                        window.location.href = 'index.html'; 
-                    } else {
-                        alert("Đăng ký thành công! Mời bạn đăng nhập.");
-                        toggleAuth(); // Đăng ký xong tự nhảy về màn hình Đăng nhập
-                    }
-                } else {
-                    alert(data.message);
-                }
-            } catch (err) { alert("Lỗi kết nối Server"); }
-        });
-    </script>
+    <script src="../js/login.js"></script>
 </body>
 </html>
